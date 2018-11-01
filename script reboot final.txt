@@ -1,0 +1,17 @@
+#!/bin/bash
+if grep -q "reboot" "/etc/passwd" ; then
+        echo "Utilisateur reboot existant"
+else
+        echo "Création de l'utilisateur reboot"
+        echo 3z%_dwT1 | sudo -S adduser reboot --gecos "Reboot,0,0,0" --disabled-password && echo "reboot:keepcool2018" | sudo chpasswd
+fi
+if [ -f /usr/bin/reboot.sh ]; then
+        echo "Le script /usr/bin/reboot.sh existe déjà"
+else
+        echo "Création du script /usr/bin/reboot.sh"
+        echo '#!/bin/bash' >> /usr/bin/reboot.sh && echo 'echo 3z%_dwT1 | sudo -S reboot now' >> /usr/bin/reboot.sh
+        chmod +x /usr/bin/reboot.sh
+fi
+echo "Modification des droits de l'utilisateur reboot"
+sed -i -r 's/.*reboot:x:.*/reboot:x:1001:1001:Reboot,0,0,0:\/home\/reboot:\/usr\/bin\/reboot.sh/g' /etc/passwd
+echo "Ok. Créer le raccourci Plink qui SSH en user reboot"
